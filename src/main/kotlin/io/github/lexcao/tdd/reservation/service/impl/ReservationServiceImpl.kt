@@ -6,6 +6,6 @@ import io.github.lexcao.tdd.reservation.service.ReservationService
 
 class ReservationServiceImpl(private val repository: ReservationRepository) : ReservationService {
     override fun makeReservation(reservation: Reservation): Reservation {
-        return reservation
+        return repository.save(reservation)
     }
 }
