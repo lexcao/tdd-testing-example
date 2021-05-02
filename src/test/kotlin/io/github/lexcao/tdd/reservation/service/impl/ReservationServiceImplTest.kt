@@ -1,9 +1,12 @@
 package io.github.lexcao.tdd.reservation.service.impl
 
+import io.github.lexcao.tdd.reservation.causes.ReservationTimeNotAvailable
 import io.github.lexcao.tdd.reservation.entity.Reservation
 import io.github.lexcao.tdd.reservation.repository.ReservationRepository
 import io.github.lexcao.tdd.reservation.service.ReservationService
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
@@ -34,6 +37,7 @@ internal class ReservationServiceImplTest {
         fun shouldSuccess() {
             // given
             val reservation = Reservation(name = "Tom", time = time)
+            every { mockRepository.findByTime(time) } returns null
             every { mockRepository.save(any()) } returns reservation
 
             // actual
@@ -41,11 +45,30 @@ internal class ReservationServiceImplTest {
 
             // verify
             verifySequence {
+                mockRepository.findByTime(time)
                 mockRepository.save(reservation)
             }
 
             // expect
             reserved shouldBe reservation
+        }
+
+        @Test
+        fun shouldFailure() {
+            // given
+            val reservation = Reservation(name = "Tom", time = time)
+            every { mockRepository.findByTime(time) } returns reservation
+
+            // actual
+            shouldThrow<ReservationTimeNotAvailable> {
+                service.makeReservation(reservation)
+            }
+
+            // verify
+            verifySequence {
+                mockRepository.findByTime(time)
+                mockRepository.save(reservation) wasNot Called
+            }
         }
     }
 }
