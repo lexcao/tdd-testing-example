@@ -13,6 +13,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation makeReservation(Reservation reservation) {
-        return reservation;
+        return repository.save(reservation);
     }
 }
