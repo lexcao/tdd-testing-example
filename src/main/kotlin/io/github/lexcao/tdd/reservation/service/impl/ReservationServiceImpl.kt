@@ -5,6 +5,6 @@ import io.github.lexcao.tdd.reservation.service.ReservationService
 
 class ReservationServiceImpl : ReservationService {
     override fun makeReservation(reservation: Reservation): Reservation {
-        TODO()
+        return reservation
     }
 }
