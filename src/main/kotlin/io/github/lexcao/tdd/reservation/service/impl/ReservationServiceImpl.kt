@@ -7,8 +7,7 @@ import io.github.lexcao.tdd.reservation.service.ReservationService
 
 class ReservationServiceImpl(private val repository: ReservationRepository) : ReservationService {
     override fun makeReservation(reservation: Reservation): Reservation {
-        val mayBeReserved = repository.findByTime(reservation.time)
-        if (mayBeReserved != null) {
+        repository.findByTime(reservation.time)?.run {
             throw ReservationTimeNotAvailable
         }
 
